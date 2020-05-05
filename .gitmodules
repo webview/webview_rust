@@ -1,0 +1,3 @@
+[submodule "webview-official"]
+	path = webview-official
+	url = git@github.com:tauri-apps/zserge-webview.git
