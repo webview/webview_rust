@@ -1,0 +1,14 @@
+[package]
+name = "webview_sys"
+version = "0.1.0"
+authors = ["Daniel Thompson-Yvetot", "Lucas Nogueira", "Tensorprogramming", "zserge"]
+readme = "README.md"
+license = "MIT / Apache 2"
+repository = "https://github.com/tauri-apps/webview_rust"
+description = "Official Webview-org Rust bindings, a tiny cross-platform library to render web-based GUIs for desktop applications"
+keywords = ["web", "gui", "desktop", "webkit"]
+categories = ["gui", "api-bindings"]
+
+[lib]
+name = "webview_sys"
+path = "lib.rs"
