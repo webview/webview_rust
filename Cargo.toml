@@ -8,6 +8,12 @@ repository = "https://github.com/tauri-apps/webview_rust"
 description = "Official Webview-org Rust bindings, a tiny cross-platform library to render web-based GUIs for desktop applications"
 keywords = ["web", "gui", "desktop", "webkit"]
 categories = ["gui", "api-bindings"]
+build = "build.rs"
+edition = "2018"
+
+[lib]
+name = "webview_rust_sys"
+path = "src/lib.rs"
 
 [dependencies]
 bitflags = "1.2"
