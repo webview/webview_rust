@@ -1,0 +1,31 @@
+[package]
+name = "webview_rust"
+version = "0.1"
+authors = ["Daniel Thompson-Yvetot", "Lucas Nogueira", "Tensorprogramming", "zserge"]
+readme = "README.md"
+license = "MIT / Apache 2"
+repository = "https://github.com/tauri-apps/webview_rust"
+description = "Official Webview-org Rust bindings, a tiny cross-platform library to render web-based GUIs for desktop applications"
+keywords = ["web", "gui", "desktop", "webkit"]
+categories = ["gui", "api-bindings"],
+
+[dependencies]
+urlencoding = "1.0"
+webview-sys = { path = "webview-sys", version = "0.5" }
+boxfnonce = "0.1"
+tinyfiledialogs = "3.3.9"
+
+[features]
+edge = ["webview-sys/edge"]
+
+[dev-dependencies]
+serde = "1.0"
+serde_derive = "1.0"
+serde_json = "1.0"
+actix-web = "2.0"
+actix-rt = "1.1"
+rust-embed = "5.5"
+mime_guess = "2.0"
+futures = "0.3"
+grep = "0.2.5"
+walkdir = "2.3.1"
