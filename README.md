@@ -6,8 +6,10 @@ This repository is the staging area for the construction of "official" rust bind
 ## Setup for development
 Please clone this repository and install the submodule:
 ```
-git clone --recurse-submodules -j8 git://github.com/tauri-apps/webview_rust.git
+git clone --recurse-submodules -j8 git://github.com:tauri-apps/webview_rust.git
 ```
+
+If it bails, please make sure you are using a proper SSH key. 
 
 ## License
 MIT / Apache 2
