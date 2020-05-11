@@ -6,22 +6,37 @@ fn main() {
 
     let target = env::var("TARGET").unwrap();
 
-    build
-        .include("webview-offical/webview.h")
-        .flag_if_supported("-std=c11")
-        .flag_if_supported("-w");
+    build.include("webview-offical");
 
     if target.contains("windows") {
-        build.include("webview-offical/script/WebView2.h");
-        build.include("webview.cc").flag_if_supported("/std:c++17");
+        build.include("webview-official/script");
+
+        for &lib in &["windowsapp", "user32", "oleaut32", "ole32"] {
+            println!("cargo:rustc-link-lib={}", lib);
+        }
+
+        if target.contains("x86_64") {
+            println!(
+                "cargo:rustc-link-search={}",
+                "webview-official/dll/x64"
+            );
+        } else {
+            println!(
+                "cargo:rustc-link-search={}",
+                "webview-official/dll/x86"
+            );
+        }
+
+        println!(
+            "cargo:rustc-link-lib={}",
+            "WebView2Loader.dll"
+        );
+    } else if target.contains("apple") {
+        println!("cargo:rustc-link-lib=framework=Cocoa");
+        println!("cargo:rustc-link-lib=framework=WebKit");
     }
 
-    println!(
-        "cargo:rustc-link-lib={}",
-        "webview-offical/dll/x64/webview.dll"
-    );
-    println!(
-        "cargo:rustc-link-lib={}",
-        "webview-offical/dll/x64/WebView2Loader.dll"
-    );
+    build.file("webview-official/webview.cc").flag_if_supported("/std:c++17");
+    build.compile("webview");
+
 }
