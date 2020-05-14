@@ -32,7 +32,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with: 
           name: sample
-          path: target/debug/examples/sample.exe
+          path: target/debug/examples/sample
         if: startsWith(matrix.os, 'ubuntu')
         uses: actions/upload-artifact@v1
         with: 
@@ -42,5 +42,5 @@ jobs:
         uses: actions/upload-artifact@v1
         with: 
           name: sample
-          path: target/debug/examples/sample.exe
+          path: target/debug/examples/sample
         
