@@ -15,9 +15,9 @@ edition = "2018"
 name = "webview_rust_sys"
 path = "src/lib.rs"
 
-[[bin]]
+[[example]]
 name = "sample"
-path = "src/sample.rs"
+path = "examples/sample/src/main.rs"
 
 [build-dependencies]
 cc = "1"

@@ -15,17 +15,21 @@ fn main() {
             println!("cargo:rustc-link-lib={}", lib);
         }
 
-        if target.contains("x86_64") {
-            println!(
-                "cargo:rustc-link-search={}",
-                "webview-official/dll/x64"
-            );
+        let webview2_path = if target.contains("x86_64") {
+            "webview-official/script/Microsoft.Web.WebView2.0.8.355/build/native/x64"
         } else {
-            println!(
-                "cargo:rustc-link-search={}",
-                "webview-official/dll/x86"
-            );
+            "webview-official/script/Microsoft.Web.WebView2.0.8.355/build/native/x86"
+        };
+
+        for &lib in &["WebView2Loader.dll", "WebView2Loader.dll.lib"] {
+            let lib_path = format!("{}/{}", webview2_path, lib);
+            println!("cargo:rerun-if-changed={}", lib_path);
         }
+
+        println!(
+            "cargo:rustc-link-search={}",
+            webview2_path
+        );
 
         println!(
             "cargo:rustc-link-lib={}",
@@ -36,7 +40,9 @@ fn main() {
         println!("cargo:rustc-link-lib=framework=WebKit");
     }
 
-    build.file("webview-official/webview.cc").flag_if_supported("/std:c++17");
-    build.compile("webview");
+    println!("cargo:rerun-if-changed=webview-official/webview.h");
+    println!("cargo:rerun-if-changed=webview-official/webview.cc");
 
+    build.file("webview-official/webview.cc").flag("/std:c++11");
+    build.compile("webview");
 }
