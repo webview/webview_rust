@@ -26,15 +26,9 @@ fn main() {
             println!("cargo:rerun-if-changed={}", lib_path);
         }
 
-        println!(
-            "cargo:rustc-link-search={}",
-            webview2_path
-        );
+        println!("cargo:rustc-link-search={}", webview2_path);
 
-        println!(
-            "cargo:rustc-link-lib={}",
-            "WebView2Loader.dll"
-        );
+        println!("cargo:rustc-link-lib={}", "WebView2Loader.dll");
     } else if target.contains("apple") {
         println!("cargo:rustc-link-lib=framework=Cocoa");
         println!("cargo:rustc-link-lib=framework=WebKit");
@@ -43,6 +37,6 @@ fn main() {
     println!("cargo:rerun-if-changed=webview-official/webview.h");
     println!("cargo:rerun-if-changed=webview-official/webview.cc");
 
-    build.file("webview-official/webview.cc").flag("/std:c++11");
+    build.file("webview-official/webview.cc").flag("/std:c++17");
     build.compile("webview");
 }
