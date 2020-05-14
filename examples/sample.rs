@@ -3,7 +3,7 @@ use webview_rust_sys::{
 };
 
 fn main() {
-    let data = webview_create(true, None);
+    let data = webview_create(false, None);
     webview_set_title(data, "TEST");
     webview_set_size(data, 800, 600, SizeHint::NONE);
     webview_navigate(data, "https://google.com");

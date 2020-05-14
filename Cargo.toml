@@ -17,7 +17,7 @@ path = "src/lib.rs"
 
 [[example]]
 name = "sample"
-path = "examples/sample/src/main.rs"
+path = "examples/sample.rs"
 
 [build-dependencies]
 cc = "1"
