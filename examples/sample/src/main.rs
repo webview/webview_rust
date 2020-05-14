@@ -3,11 +3,11 @@ use webview_rust_sys::{
 };
 
 fn main() {
-    unsafe {
-        let data = webview_create(true, None);
-        webview_set_title(data, "TEST");
-        webview_set_size(data, 800, 600, SizeHint::NONE);
-        webview_navigate(data, "https://google.com");
-        webview_run(data);
-    }
+    let data = webview_create(true, None);
+    webview_set_title(data, "TEST");
+
+    webview_set_size(data, 800, 600, SizeHint::NONE);
+    webview_navigate(data, "https://google.com");
+
+    webview_run(data);
 }
