@@ -6,8 +6,6 @@ fn main() {
 
     let target = env::var("TARGET").unwrap();
 
-    build.include("webview-offical");
-
     if target.contains("windows") {
         build.include("webview-official/script");
 
@@ -21,14 +19,13 @@ fn main() {
             "webview-official/script/Microsoft.Web.WebView2.0.8.355/build/native/x86"
         };
 
-        for &lib in &["WebView2Loader.dll", "WebView2Loader.dll.lib"] {
+        for &lib in &["WebView2Loader.dll"] {
             let lib_path = format!("{}/{}", webview2_path, lib);
             println!("cargo:rerun-if-changed={}", lib_path);
+            println!("cargo:rustc-link-lib={}", lib_path);
         }
 
         println!("cargo:rustc-link-search={}", webview2_path);
-
-        println!("cargo:rustc-link-lib={}", "WebView2Loader.dll");
     } else if target.contains("apple") {
         println!("cargo:rustc-link-lib=framework=Cocoa");
         println!("cargo:rustc-link-lib=framework=WebKit");
@@ -37,6 +34,10 @@ fn main() {
     println!("cargo:rerun-if-changed=webview-official/webview.h");
     println!("cargo:rerun-if-changed=webview-official/webview.cc");
 
-    build.file("webview-official/webview.cc").flag("/std:c++17");
+    build
+        .file("webview-official/webview.cc")
+        .flag_if_supported("/std:c++17")
+        .flag_if_supported("-w");
+
     build.compile("webview");
 }
