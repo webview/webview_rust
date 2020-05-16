@@ -9,7 +9,6 @@ fn main() {
     build
         .include("webview-official/webview.h")
         .flag_if_supported("/std:c++11")
-        .flag_if_supported("-std=c++11");
         .flag_if_supported("-w");
 
     // if env::var("DEBUG").is_err() {
@@ -53,6 +52,8 @@ fn main() {
             .atleast_version("2.8")
             .probe("webkit2gtk-4.0")
             .unwrap();
+
+        build.file("webview-official/webview.cc");
     } else {
         panic!("Unsupported platform");
     }
