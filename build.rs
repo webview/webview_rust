@@ -6,7 +6,21 @@ fn main() {
 
     let target = env::var("TARGET").unwrap();
 
+    build
+        .file("webview-official/webview.cc")
+        .flag_if_supported("/std:c++11")
+        .flag_if_supported("-w");
+
+    if env::var("DEBUG").is_err() {
+        build.define("NDEBUG", None);
+    } else {
+        build.define("DEBUG", None);
+    }
+
     if target.contains("windows") {
+        build.cpp(true);
+        // build.define("UNICODE", None); // doesn't work atm.
+        build.flag_if_supported("/std:c++17");
         build.include("webview-official/script");
 
         for &lib in &["windowsapp", "user32", "oleaut32", "ole32"] {
@@ -19,22 +33,27 @@ fn main() {
             "webview-official/script/Microsoft.Web.WebView2.0.8.355/build/native/x86/WebView2Loader.dll"
         };
 
-        println!("cargo:rerun-if-changed={}", webview2_path);
         println!("cargo:rustc-link-lib={}", webview2_path);
 
         println!("cargo:rustc-link-search={}", webview2_path);
     } else if target.contains("apple") {
+        build
+            .define("OBJC_OLD_DISPATCH_PROTOTYPES", "1")
+            .flag("-x")
+            .flag("objective-c");
         println!("cargo:rustc-link-lib=framework=Cocoa");
         println!("cargo:rustc-link-lib=framework=WebKit");
+    } else if target.contains("linux") || target.contains("bsd") {
+        pkg_config::Config::new()
+            .atleast_version("2.8")
+            .probe("webkit2gtk-4.0")
+            .unwrap();
+    } else {
+        panic!("Unsupported platform");
     }
 
     println!("cargo:rerun-if-changed=webview-official/webview.h");
     println!("cargo:rerun-if-changed=webview-official/webview.cc");
-
-    build
-        .file("webview-official/webview.cc")
-        .flag_if_supported("/std:c++17")
-        .flag_if_supported("-w");
 
     build.compile("webview");
 }
