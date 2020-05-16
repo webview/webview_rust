@@ -7,15 +7,15 @@ fn main() {
     let target = env::var("TARGET").unwrap();
 
     build
-        .file("webview-official/webview.cc")
+        .include("webview-official/webview.h")
         .flag_if_supported("/std:c++11")
         .flag_if_supported("-w");
 
-    if env::var("DEBUG").is_err() {
-        build.define("NDEBUG", None);
-    } else {
-        build.define("DEBUG", None);
-    }
+    // if env::var("DEBUG").is_err() {
+    //     build.define("NDEBUG", None);
+    // } else {
+    //     build.define("DEBUG", None);
+    // }
 
     if target.contains("windows") {
         build.cpp(true);
@@ -38,6 +38,7 @@ fn main() {
         println!("cargo:rustc-link-search={}", webview2_path);
     } else if target.contains("apple") {
         build
+            .file("webview-official/webview.cc")
             .define("OBJC_OLD_DISPATCH_PROTOTYPES", "1")
             .flag("-x")
             .flag("objective-c");
