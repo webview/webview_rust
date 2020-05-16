@@ -20,7 +20,9 @@ fn main() {
     if target.contains("windows") {
         build.cpp(true);
         // build.define("UNICODE", None); // doesn't work atm.
-        build.flag_if_supported("/std:c++17");
+        build
+            .file("webview-official/webview.cc")
+            .flag_if_supported("/std:c++17");
         build.include("webview-official/script");
 
         for &lib in &["windowsapp", "user32", "oleaut32", "ole32"] {
