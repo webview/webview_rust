@@ -7,6 +7,7 @@ fn main() {
     let target = env::var("TARGET").unwrap();
 
     build
+        .cpp(true)
         .include("webview-official/webview.h")
         .flag_if_supported("/std:c++11")
         .flag_if_supported("-w");
@@ -18,7 +19,6 @@ fn main() {
     // }
 
     if target.contains("windows") {
-        build.cpp(true);
         // build.define("UNICODE", None); // doesn't work atm.
         build
             .file("webview-official/webview.cc")
