@@ -27,21 +27,23 @@ jobs:
       - name: build
         run: |
           cargo build --example sample
+  
       - name: Upload Artifacts (Windows)
-        if: startsWith(matrix.os, 'windows')
+        if: matrix.platform == 'windows-latest'
         uses: actions/upload-artifact@v1
         with: 
           name: sample
-          path: target/debug/examples/sample
+          path: target/debug/examples/sample.exe
+  
       - name: Upload Artifacts (Ubuntu)
-        if: startsWith(matrix.os, 'ubuntu')
+        if: matrix.platform == 'ubuntu-latest'
         uses: actions/upload-artifact@v1
         with: 
           name: sample
           path: target/debug/examples/sample
         
       - name: Upload Artifacts (MacOS)
-        if: startsWith(matrix.os, 'macos')
+        if: matrix.platform == 'macos-latest'
         uses: actions/upload-artifact@v1
         with: 
           name: sample
