@@ -41,9 +41,9 @@ fn main() {
     } else if target.contains("apple") {
         build
             .file("webview-official/webview.cc")
+            .flag("-std=c++11")
             .flag("-x")
-            .flag("objective-c")
-            .flag_if_supported("-std=c++11");
+            .flag("objective-c");
 
         println!("cargo:rustc-link-lib=framework=Cocoa");
         println!("cargo:rustc-link-lib=framework=WebKit");
