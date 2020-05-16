@@ -42,7 +42,8 @@ fn main() {
         build
             .file("webview-official/webview.cc")
             .flag("-std=c++11")
-            .flag("-x");
+            .flag("-x")
+            .flag("objective-c++");
 
         println!("cargo:rustc-link-lib=framework=Cocoa");
         println!("cargo:rustc-link-lib=framework=WebKit");
