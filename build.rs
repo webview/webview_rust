@@ -49,9 +49,14 @@ fn main() {
         println!("cargo:rustc-link-lib=framework=WebKit");
     } else if target.contains("linux") || target.contains("bsd") {
         pkg_config::Config::new()
-            .atleast_version("2.8")
+            .atleast_version("3.0")
             .probe("webkit2gtk-4.0")
             .unwrap();
+
+        // pkg_config::Config::new()
+        //     .atleast_version("3.0")
+        //     .probe("gtk+-3.0")
+        //     .unwrap();
 
         build.file("webview-official/webview.cc");
     } else {
