@@ -32,20 +32,20 @@ jobs:
         if: matrix.platform == 'windows-latest'
         uses: actions/upload-artifact@v1
         with: 
-          name: sample
+          name: sample-windows
           path: target/debug/examples/sample.exe
   
       - name: Upload Artifacts (Ubuntu)
         if: matrix.platform == 'ubuntu-latest'
         uses: actions/upload-artifact@v1
         with: 
-          name: sample
+          name: sample-ubuntu
           path: target/debug/examples/sample
         
       - name: Upload Artifacts (MacOS)
         if: matrix.platform == 'macos-latest'
         uses: actions/upload-artifact@v1
         with: 
-          name: sample
+          name: sample-macOS
           path: target/debug/examples/sample
         
