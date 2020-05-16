@@ -9,6 +9,7 @@ fn main() {
     build
         .include("webview-official/webview.h")
         .flag_if_supported("/std:c++11")
+        .flag_if_supported("-std=c++11");
         .flag_if_supported("-w");
 
     // if env::var("DEBUG").is_err() {
@@ -41,9 +42,10 @@ fn main() {
     } else if target.contains("apple") {
         build
             .file("webview-official/webview.cc")
-            .define("OBJC_OLD_DISPATCH_PROTOTYPES", "1")
             .flag("-x")
-            .flag("objective-c");
+            .flag("objective-c")
+            .flag_if_supported("-std=c++11");
+
         println!("cargo:rustc-link-lib=framework=Cocoa");
         println!("cargo:rustc-link-lib=framework=WebKit");
     } else if target.contains("linux") || target.contains("bsd") {
