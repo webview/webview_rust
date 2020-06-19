@@ -1,4 +1,4 @@
-name: clippy and eslint check
+name: clippy check
 
 on:
   push:
@@ -12,6 +12,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: true
       - name: install webkit2gtk
         run: |
           sudo apt-get update
