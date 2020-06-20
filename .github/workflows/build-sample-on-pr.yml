@@ -1,9 +1,9 @@
-name: build example sample
+name: build sample project
 
 on: pull_request
 
 jobs:
-  build-tauri-core:
+  build-sample:
     runs-on: ${{ matrix.platform }}
 
     strategy:
