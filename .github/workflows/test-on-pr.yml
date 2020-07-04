@@ -3,7 +3,7 @@ name: test library
 on: pull_request
 
 jobs:
-  build-tauri-core:
+  test-webview-rust:
     runs-on: ${{ matrix.platform }}
 
     strategy:
