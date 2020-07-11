@@ -1,4 +1,4 @@
-use std::ffi::CString;
+use std::ffi::{CString, CStr};
 use std::os::raw::*;
 use std::ptr::null_mut;
 
@@ -30,10 +30,19 @@ impl Webview {
             Webview(unsafe { sys::webview_create(debug as c_int, null_mut()) })
         }
     }
-    
-    pub fn dispatch(&mut self, f: sys::DispatchFn, arg: &str) {
-        let c_arg = CString::new(arg).expect("No nul bytes in parameter arg");
-        unsafe { sys::webview_dispatch(self.0, Some(f), c_arg.as_ptr() as *mut _) }
+
+    pub fn dispatch<F>(&mut self, f: F)
+    where F: FnOnce(&mut Webview) + Send + 'static
+    {
+        let closure = Box::into_raw(Box::new(f));
+        extern "C" fn callback<F>(webview: sys::webview_t, arg: *mut c_void)
+        where F: FnOnce(&mut Webview) + Send + 'static
+        {
+            let mut  webview = Webview(webview);
+            let closure: Box<F> = unsafe { Box::from_raw(arg as *mut F) };
+            (*closure)(&mut webview);
+        }
+        unsafe { sys::webview_dispatch(self.0, Some(callback::<F>), closure as *mut _) }
     }
     
     pub fn set_title(&mut self, title: &str) {
@@ -55,11 +64,21 @@ impl Webview {
         let c_js = CString::new(js).expect("No nul bytes in parameter js");
         unsafe { sys::webview_eval(self.0, c_js.as_ptr()) }
     }
-    
-    pub fn bind(&mut self, name: &str, f: sys::BindFn, arg: &str) {
-        let c_name = CString::new(name).expect("No nul bytes in parameter name");
-        let c_arg = CString::new(arg).expect("No nul bytes in parameter arg");
-        unsafe { sys::webview_bind(self.0, c_name.as_ptr(), Some(f), c_arg.as_ptr() as *mut _) }
+
+    pub fn ind<F>(&mut self, name: &str, f: F)
+    where F: FnOnce(&str, &str) + 'static
+    {
+        let c_name = CString::new(name).expect("No null bytes in parameter name");
+        let closure = Box::into_raw(Box::new(f));
+        extern "C" fn callback<F>(seq: *const c_char, req: *const c_char, arg: *mut c_void)
+        where F: FnOnce(&str, &str) + 'static
+        {
+            let seq = unsafe { CStr::from_ptr(seq).to_str().expect("No null bytes in parameter seq") };
+            let req = unsafe { CStr::from_ptr(req).to_str().expect("No null bytes in parameter req") };
+            let closure: Box<F> = unsafe { Box::from_raw(arg as *mut F) };
+            (*closure)(seq, req);
+        }
+        unsafe { sys::webview_bind(self.0, c_name.as_ptr(), Some(callback::<F>), closure as *mut _) }
     }
     
     pub fn r#return(&mut self, seq: &str, status: c_int, result: &str) {
