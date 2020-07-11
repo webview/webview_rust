@@ -64,40 +64,8 @@ impl Webview {
         let c_js = CString::new(js).expect("No nul bytes in parameter js");
         unsafe { sys::webview_eval(self.0, c_js.as_ptr()) }
     }
-<<<<<<< HEAD
 
-    pub fn ind<F>(&mut self, name: &str, f: F)
-=======
-    unsafe { ffi::webview_dispatch(w.0, Some(callback::<F>), closure as *mut _) }
-}
-
-pub fn webview_set_title(w: &mut Webview, title: &str) {
-    let c_title = CString::new(title).expect("No nul bytes in parameter title");
-    unsafe { ffi::webview_set_title(w.0, c_title.as_ptr()) }
-}
-
-pub fn webview_navigate(w: &mut Webview, url: &str) {
-    let c_url = CString::new(url).expect("No nul bytes in parameter url");
-    unsafe { ffi::webview_navigate(w.0, c_url.as_ptr()) }
-}
-
-pub fn webview_init(w: &mut Webview, js: &str) {
-    let c_js = CString::new(js).expect("No nul bytes in parameter js");
-    unsafe { ffi::webview_init(w.0, c_js.as_ptr()) }
-}
-
-pub fn webview_eval(w: &mut Webview, js: &str) {
-    let c_js = CString::new(js).expect("No nul bytes in parameter js");
-    unsafe { ffi::webview_eval(w.0, c_js.as_ptr()) }
-}
-
-pub fn webview_bind<F>(w: &mut Webview, name: &str, f: F)
-where F: FnOnce(&str, &str) + 'static
-{
-    let c_name = CString::new(name).expect("No nul bytes in parameter name");
-    let closure = Box::into_raw(Box::new(f));
-    extern "C" fn callback<F>(seq: *const c_char, req: *const c_char, arg: *mut c_void)
->>>>>>> edbb1cc... Fix function name on bind
+    pub fn bind<F>(&mut self, name: &str, f: F)
     where F: FnOnce(&str, &str) + 'static
     {
         let c_name = CString::new(name).expect("No null bytes in parameter name");
