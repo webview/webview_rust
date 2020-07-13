@@ -1,5 +1,6 @@
 use cc::Build;
 use std::env;
+use std::path::PathBuf;
 
 fn main() {
     let mut build = Build::new();
@@ -29,15 +30,22 @@ fn main() {
             println!("cargo:rustc-link-lib={}", lib);
         }
 
-        let webview2_path = if target.contains("x86_64") {
-            "webview-official/script/Microsoft.Web.WebView2.0.9.488/build/native/x64/WebView2Loader.dll"
+        let webview2_arch = if target.contains("x86_64") {
+            "x64"
         } else {
-            "webview-official/script/Microsoft.Web.WebView2.0.9.488/build/native/x86/WebView2Loader.dll"
+            "x86"
         };
 
-        println!("cargo:rustc-link-lib={}", webview2_path);
+        // calculate full path to WebView2Loader.dll
+        let mut webview2_path_buf = PathBuf::from(env::current_dir().unwrap().to_str().unwrap());
+        webview2_path_buf.push("webview-official/script/Microsoft.Web.WebView2.0.9.488/build/native");
+        webview2_path_buf.push(webview2_arch);
+        let webview2_dir = webview2_path_buf.as_path().to_str().unwrap();
 
-        println!("cargo:rustc-link-search={}", webview2_path);
+        let loader_asm_name = "WebView2Loader.dll";
+
+        println!("cargo:rustc-link-search={}", webview2_dir);
+        println!("cargo:rustc-link-lib={}", loader_asm_name);
     } else if target.contains("apple") {
         build.file("webview-official/webview.cc").flag("-std=c++11");
 
