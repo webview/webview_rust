@@ -1,19 +1,29 @@
+pub mod builder;
+mod sys;
+
+pub use builder::WebviewBuilder;
+
 use std::ffi::{CStr, CString};
 use std::mem;
 use std::os::raw::*;
 use std::ptr::null_mut;
 use std::sync::Arc;
 
-mod sys;
-
 pub enum Window {}
 
 #[repr(i32)]
+#[derive(Debug)]
 pub enum SizeHint {
     NONE = 0,
     MIN = 1,
     MAX = 2,
     FIXED = 3,
+}
+
+impl Default for SizeHint {
+    fn default() -> Self {
+        SizeHint::NONE
+    }
 }
 
 #[derive(Clone)]
