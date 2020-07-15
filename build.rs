@@ -1,5 +1,6 @@
 use cc::Build;
 use std::env;
+use std::fs;
 use std::path::PathBuf;
 
 fn main() {
@@ -46,6 +47,23 @@ fn main() {
 
         println!("cargo:rustc-link-search={}", webview2_dir);
         println!("cargo:rustc-link-lib={}", loader_asm_name);
+
+        // copy WebView2Loader.dll to `target/debug`
+        let mut src_asm_buf = PathBuf::from(webview2_dir);
+        src_asm_buf.push(loader_asm_name);
+
+        // we want to be able to calculate C:\crate\root\target\debug\
+        //           while we can get this ^^^^^^^^^^^^^   and  ^^^^^ from env::current_dir() and %PROFILE% respectively
+        // there's no way to get this (reliably)         ^^^^^^
+        // we can, however, use %OUT_DIR% (C:\crate\root\target\debug\build\webview_rust-xxxx\out\)
+        // and navigate backwards to here  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+        let mut target_asm_buf = PathBuf::from(env::var("OUT_DIR").unwrap());
+        target_asm_buf.pop();
+        target_asm_buf.pop();
+        target_asm_buf.pop();
+        target_asm_buf.push(loader_asm_name);
+
+        fs::copy(src_asm_buf.as_path(), target_asm_buf.as_path()).unwrap();
     } else if target.contains("apple") {
         build.file("webview-official/webview.cc").flag("-std=c++11");
 
