@@ -64,7 +64,7 @@ impl Webview {
 
     // TODO Window instance
     pub fn set_title(&mut self, title: &str) {
-        let c_title = CString::new(title).expect("No nul bytes in parameter title");
+        let c_title = CString::new(title).expect("No null bytes in parameter title");
         unsafe { sys::webview_set_title(*self.0, c_title.as_ptr()) }
     }
 
@@ -77,17 +77,17 @@ impl Webview {
     }
 
     pub fn navigate(&mut self, url: &str) {
-        let c_url = CString::new(url).expect("No nul bytes in parameter url");
+        let c_url = CString::new(url).expect("No null bytes in parameter url");
         unsafe { sys::webview_navigate(*self.0, c_url.as_ptr()) }
     }
 
     pub fn init(&mut self, js: &str) {
-        let c_js = CString::new(js).expect("No nul bytes in parameter js");
+        let c_js = CString::new(js).expect("No null bytes in parameter js");
         unsafe { sys::webview_init(*self.0, c_js.as_ptr()) }
     }
 
     pub fn eval(&mut self, js: &str) {
-        let c_js = CString::new(js).expect("No nul bytes in parameter js");
+        let c_js = CString::new(js).expect("No null bytes in parameter js");
         unsafe { sys::webview_eval(*self.0, c_js.as_ptr()) }
     }
 
@@ -142,8 +142,8 @@ impl Webview {
     }
 
     pub fn r#return(&self, seq: &str, status: c_int, result: &str) {
-        let c_seq = CString::new(seq).expect("No nul bytes in parameter seq");
-        let c_result = CString::new(result).expect("No nul bytes in parameter result");
+        let c_seq = CString::new(seq).expect("No null bytes in parameter seq");
+        let c_result = CString::new(result).expect("No null bytes in parameter result");
         unsafe { sys::webview_return(*self.0, c_seq.as_ptr(), status, c_result.as_ptr()) }
     }
 }
@@ -168,14 +168,14 @@ impl WebviewMut {
 
     pub fn navigate(&mut self, url: &str) -> Result<(), Error> {
         let webview = self.0.upgrade().ok_or(Error::WebviewNull)?;
-        let c_url = CString::new(url).expect("No nul bytes in parameter url");
+        let c_url = CString::new(url).expect("No null bytes in parameter url");
         unsafe { sys::webview_navigate(*webview, c_url.as_ptr()) }
         Ok(())
     }
 
     pub fn eval(&mut self, js: &str) -> Result<(), Error> {
         let webview = self.0.upgrade().ok_or(Error::WebviewNull)?;
-        let c_js = CString::new(js).expect("No nul bytes in parameter js");
+        let c_js = CString::new(js).expect("No null bytes in parameter js");
         unsafe { sys::webview_eval(*webview, c_js.as_ptr()) }
         Ok(())
     }
@@ -218,8 +218,8 @@ impl WebviewMut {
 
     pub fn r#return(&self, seq: &str, status: c_int, result: &str) -> Result<(), Error> {
         let webview = self.0.upgrade().ok_or(Error::WebviewNull)?;
-        let c_seq = CString::new(seq).expect("No nul bytes in parameter seq");
-        let c_result = CString::new(result).expect("No nul bytes in parameter result");
+        let c_seq = CString::new(seq).expect("No null bytes in parameter seq");
+        let c_result = CString::new(result).expect("No null bytes in parameter result");
         unsafe { sys::webview_return(*webview, c_seq.as_ptr(), status, c_result.as_ptr()) }
         Ok(())
     }
