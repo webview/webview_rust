@@ -39,7 +39,8 @@ fn main() {
 
         // calculate full path to WebView2Loader.dll
         let mut webview2_path_buf = PathBuf::from(env::current_dir().unwrap().to_str().unwrap());
-        webview2_path_buf.push("webview-official/script/Microsoft.Web.WebView2.0.9.488/build/native");
+        webview2_path_buf
+            .push("webview-official/script/Microsoft.Web.WebView2.0.9.488/build/native");
         webview2_path_buf.push(webview2_arch);
         let webview2_dir = webview2_path_buf.as_path().to_str().unwrap();
 
