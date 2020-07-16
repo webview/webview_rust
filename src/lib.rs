@@ -5,5 +5,4 @@ mod webview;
 
 pub use builder::WebviewBuilder;
 pub use error::Error;
-pub use webview::{Window, Webview, WebviewMut, SizeHint};
-
+pub use webview::{SizeHint, Webview, WebviewMut, Window};

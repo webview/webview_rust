@@ -12,7 +12,7 @@ fn main() {
         .build();
 
     let mut webview_ref = webview.as_mut();
-    
+
     thread::spawn(move || {
         thread::sleep(time::Duration::from_secs(5));
         webview_ref.terminate().unwrap();
