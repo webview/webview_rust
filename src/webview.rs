@@ -109,13 +109,13 @@ impl Webview {
 
     pub fn bind<F>(&mut self, name: &str, f: F)
     where
-        F: FnMut(&str, &str) + 'static,
+        F: FnMut(&str, &str),
     {
         let c_name = CString::new(name).expect("No null bytes in parameter name");
         let closure = Box::into_raw(Box::new(f));
         extern "C" fn callback<F>(seq: *const c_char, req: *const c_char, arg: *mut c_void)
         where
-            F: FnMut(&str, &str) + 'static,
+            F: FnMut(&str, &str),
         {
             let seq = unsafe {
                 CStr::from_ptr(seq)
