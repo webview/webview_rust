@@ -173,10 +173,21 @@ impl WebviewMut {
         Ok(())
     }
 
-    pub fn eval(&mut self, js: &str) -> Result<(), Error> {
+    pub fn dispatch<F>(&mut self, f: F) -> Result<(), Error>
+    where
+        F: FnOnce(&mut Webview) + Send + 'static,
+    {
         let webview = self.0.upgrade().ok_or(Error::WebviewNull)?;
-        let c_js = CString::new(js).expect("No null bytes in parameter js");
-        unsafe { sys::webview_eval(*webview, c_js.as_ptr()) }
+        let closure = Box::into_raw(Box::new(f));
+        extern "C" fn callback<F>(webview: sys::webview_t, arg: *mut c_void)
+        where
+            F: FnOnce(&mut Webview) + Send + 'static,
+        {
+            let mut webview = Webview(Arc::new(webview));
+            let closure: Box<F> = unsafe { Box::from_raw(arg as *mut F) };
+            (*closure)(&mut webview);
+        }
+        unsafe { sys::webview_dispatch(*webview, Some(callback::<F>), closure as *mut _) }
         Ok(())
     }
 
