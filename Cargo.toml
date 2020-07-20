@@ -2,7 +2,7 @@
 name = "webview_official"
 version = "0.0.1"
 authors = [
-  "Lucas Fernandes Gonçalves Nogueira <lucas@quasar.dev>",
+  "Lucas Fernandes Gonçalves Nogueira <lucas@tauri.studio>",
   "Daniel Thompson-Yvetot <denjell@sfosc.org>",
   "Tensor Programming <tensordeveloper@gmail.com>",
   "Serge Zaitsev <zaitsev.serge@gmail.com>"
