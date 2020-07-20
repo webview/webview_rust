@@ -13,6 +13,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          submodules: true
       - name: cargo login
         run: cargo login ${{ secrets.crate_token }}
       - name: git config

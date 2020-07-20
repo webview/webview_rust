@@ -3,7 +3,7 @@
   "pkgManagers": {
     "rust": {
       "version": true,
-      "getPublishedVersion": "cargo search ${ pkg.pkg } --limit 1 | sed -nE 's/^[^\"]*\"//; s/\".*//1p' -",
+      "getPublishedVersion": "cargo search ${ pkgFile.pkg.package.name } --limit 1 | sed -nE 's/^[^\"]*\"//; s/\".*//1p' -",
       "prepublish": [
         "sudo apt-get update",
         "sudo apt-get install -y webkit2gtk-4.0",
@@ -62,13 +62,13 @@
         }
       ],
       "postpublish": [
-        "git tag ${ pkg.pkg }-v${ pkgFile.versionMajor } -f",
-        "git tag ${ pkg.pkg }-v${ pkgFile.versionMajor }.${ pkgFile.versionMinor } -f",
+        "git tag ${ pkgFile.pkg.package.name }-v${ pkgFile.versionMajor } -f",
+        "git tag ${ pkgFile.pkg.package.name }-v${ pkgFile.versionMajor }.${ pkgFile.versionMinor } -f",
         "git push --tags -f"
       ],
       "assets": [{
-        "path": "${ pkg.path }/${ pkg.pkg }-${ pkgFile.version }.crate",
-        "name": "${ pkg.pkg }-${ pkgFile.version }.crate"
+        "path": "${ pkg.path }/${ pkgFile.pkg.package.name }-${ pkgFile.version }.crate",
+        "name": "${ pkgFile.pkg.package.name }-${ pkgFile.version }.crate"
       }]
     }
   },
