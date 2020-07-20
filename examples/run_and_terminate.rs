@@ -1,5 +1,5 @@
 use std::{thread, time};
-use webview_rust_sys::{SizeHint, WebviewBuilder};
+use webview_official::{SizeHint, WebviewBuilder};
 
 fn main() {
     let mut webview = WebviewBuilder::new()
