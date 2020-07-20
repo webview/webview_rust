@@ -8,7 +8,7 @@ authors = [
   "Serge Zaitsev <zaitsev.serge@gmail.com>"
 ]
 readme = "README.md"
-license = "MIT / Apache 2"
+license = "MIT OR Apache-2.0"
 repository = "https://github.com/tauri-apps/webview_rust"
 description = "Official Webview-org Rust bindings, a tiny cross-platform library to render web-based GUIs for desktop applications"
 keywords = [ "web", "gui", "desktop", "webkit" ]
