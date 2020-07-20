@@ -1,5 +1,5 @@
 ---
-"webview-official": patch
+"webview": patch
 ---
 
 Publishing with Covector.
