@@ -1,0 +1,78 @@
+{
+  "gitSiteUrl": "https://www.github.com/webview/webview_rust/",
+  "pkgManagers": {
+    "rust": {
+      "version": true,
+      "getPublishedVersion": "cargo search ${ pkg.pkg } --limit 1 | sed -nE 's/^[^\"]*\"//; s/\".*//1p' -",
+      "prepublish": [{
+          "command": "cargo generate-lockfile",
+          "dryRunCommand": true,
+          "runFromRoot": true,
+          "pipe": true
+        },
+        {
+          "command": "echo \"# Cargo Audit\"",
+          "dryRunCommand": true,
+          "pipe": true
+        },
+        {
+          "command": "echo \"\\`\\`\\`\"",
+          "dryRunCommand": true,
+          "pipe": true
+        },
+        {
+          "command": "cargo audit",
+          "dryRunCommand": true,
+          "runFromRoot": true,
+          "pipe": true
+        },
+        {
+          "command": "echo \"\\`\\`\\`\"",
+          "dryRunCommand": true,
+          "pipe": true
+        },
+        {
+          "command": "cargo package --allow-dirty",
+          "dryRunCommand": true,
+          "pipe": true
+        }
+      ],
+      "publish": [{
+          "command": "echo \"# Cargo Publish\"",
+          "dryRunCommand": true,
+          "pipe": true
+        },
+        {
+          "command": "echo \"\\`\\`\\`\"",
+          "dryRunCommand": true,
+          "pipe": true
+        },
+        {
+          "command": "cargo publish",
+          "dryRunCommand": "cargo publish --dry-run",
+          "pipe": true
+        },
+        {
+          "command": "echo \"\\`\\`\\`\"",
+          "dryRunCommand": true,
+          "pipe": true
+        }
+      ],
+      "postpublish": [
+        "git tag ${ pkg.pkg }-v${ pkgFile.versionMajor } -f",
+        "git tag ${ pkg.pkg }-v${ pkgFile.versionMajor }.${ pkgFile.versionMinor } -f",
+        "git push --tags -f"
+      ],
+      "assets": [{
+        "path": "${ pkg.path }/${ pkg.pkg }-${ pkgFile.version }.crate",
+        "name": "${ pkg.pkg }-${ pkgFile.version }.crate"
+      }]
+    }
+  },
+  "packages": {
+    "webview": {
+      "path": ".",
+      "manager": "rust"
+    }
+  }
+}

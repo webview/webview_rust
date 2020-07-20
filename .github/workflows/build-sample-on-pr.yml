@@ -1,0 +1,51 @@
+name: build sample project
+
+on: pull_request
+
+jobs:
+  build-sample:
+    runs-on: ${{ matrix.platform }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: install stable
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: install webkit2gtk (ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y webkit2gtk-4.0
+      - name: build
+        run: |
+          cargo build --example sample
+  
+      - name: Upload Artifacts (Windows)
+        if: matrix.platform == 'windows-latest'
+        uses: actions/upload-artifact@v1
+        with: 
+          name: sample-windows
+          path: target/debug/examples/sample.exe
+  
+      - name: Upload Artifacts (Ubuntu)
+        if: matrix.platform == 'ubuntu-latest'
+        uses: actions/upload-artifact@v1
+        with: 
+          name: sample-ubuntu
+          path: target/debug/examples/sample
+        
+      - name: Upload Artifacts (MacOS)
+        if: matrix.platform == 'macos-latest'
+        uses: actions/upload-artifact@v1
+        with: 
+          name: sample-macOS
+          path: target/debug/examples/sample
+        
