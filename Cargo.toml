@@ -1,5 +1,5 @@
 [package]
-name = "webview_official_sys"
+name = "webview_official"
 version = "0.0.0"
 authors = ["Lucas Fernandes Gonçalves Nogueira <lucas@quasar.dev>", "Daniel Thompson-Yvetot <denjell@sfosc.org>", "Tensor Programming <tensordeveloper@gmail.com>", "Serge Zaitsev <zaitsev.serge@gmail.com>"]
 readme = "README.md"
@@ -12,7 +12,7 @@ build = "build.rs"
 edition = "2018"
 
 [lib]
-name = "webview_official_sys"
+name = "webview_official"
 path = "src/lib.rs"
 
 [[example]]

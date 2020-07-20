@@ -70,7 +70,7 @@
     }
   },
   "packages": {
-    "webview-official-sys": {
+    "webview-official": {
       "path": ".",
       "manager": "rust"
     }
