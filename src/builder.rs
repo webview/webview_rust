@@ -70,7 +70,7 @@ impl<'a> WebviewBuilder<'a> {
         self
     }
 
-    pub fn build(self) -> Webview {
+    pub fn build(self) -> Webview<'a> {
         let mut w = Webview::create(self.debug, self.window);
         if let Some(title) = self.title {
             w.set_title(title);
@@ -83,7 +83,7 @@ impl<'a> WebviewBuilder<'a> {
         if let Some(url) = self.url {
             w.navigate(url);
         }
-        
+
         if let Some(eval) = self.eval {
             w.eval(eval);
         }
