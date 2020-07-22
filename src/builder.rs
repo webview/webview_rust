@@ -76,14 +76,14 @@ impl<'a> WebviewBuilder<'a> {
             w.set_title(title);
         }
 
-        if let Some(url) = self.url {
-            w.navigate(url);
-        }
-
         if let Some(init) = self.init {
             w.init(init);
         }
 
+        if let Some(url) = self.url {
+            w.navigate(url);
+        }
+        
         if let Some(eval) = self.eval {
             w.eval(eval);
         }
