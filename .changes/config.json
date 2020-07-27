@@ -76,6 +76,10 @@
     "webview": {
       "path": ".",
       "manager": "rust"
+    },
+    "webview-official-sys": {
+      "path": "./webview-official-sys",
+      "manager": "rust"
     }
   }
 }

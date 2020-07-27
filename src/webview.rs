@@ -4,7 +4,9 @@ use std::os::raw::*;
 use std::ptr::null_mut;
 use std::sync::{Arc, Weak};
 
-use crate::{sys, Error};
+use crate::{Error};
+
+use webview_official_sys as sys;
 
 pub enum Window {}
 
