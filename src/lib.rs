@@ -1,6 +1,5 @@
 mod builder;
 mod error;
-mod sys;
 mod webview;
 
 pub use builder::WebviewBuilder;
