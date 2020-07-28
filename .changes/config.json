@@ -76,8 +76,8 @@
     }
   },
   "packages": {
-    "webview-official-sys": {
-      "path": "./sys",
+    "sys": {
+      "path": "./webview-official-sys",
       "manager": "rust"
     },
     "webview": {
