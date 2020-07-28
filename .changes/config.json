@@ -40,7 +40,8 @@
           "pipe": true
         }
       ],
-      "publish": [{
+      "publish": [
+        {
           "command": "echo \"# Cargo Publish\"",
           "dryRunCommand": true,
           "pipe": true
@@ -66,20 +67,23 @@
         "git tag ${ pkgFile.pkg.package.name }-v${ pkgFile.versionMajor }.${ pkgFile.versionMinor } -f",
         "git push --tags -f"
       ],
-      "assets": [{
-        "path": "${ pkg.path }/${ pkgFile.pkg.package.name }-${ pkgFile.version }.crate",
-        "name": "${ pkgFile.pkg.package.name }-${ pkgFile.version }.crate"
-      }]
+      "assets": [
+        {
+          "path": "${ pkg.path }/${ pkgFile.pkg.package.name }-${ pkgFile.version }.crate",
+          "name": "${ pkgFile.pkg.package.name }-${ pkgFile.version }.crate"
+        }
+      ]
     }
   },
   "packages": {
     "webview-official-sys": {
-      "path": "./webview-official-sys",
+      "path": "./sys",
       "manager": "rust"
     },
     "webview": {
       "path": ".",
-      "manager": "rust"
+      "manager": "rust",
+      "dependencies": ["sys"]
     }
   }
 }
