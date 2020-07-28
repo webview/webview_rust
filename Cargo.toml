@@ -24,4 +24,4 @@ name = "sample"
 path = "examples/sample.rs"
 
 [dependencies]
-webview-official-sys = { path = "webview-official-sys", version = "0.0.0" }
+webview-official-sys = { path = "webview-official-sys", version = "0.1" }
