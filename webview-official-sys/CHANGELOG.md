@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.2]
+
+-   -   Bump WebView2 to version 1.0
+-   Enable DPI awareness by default on Windows
+    -   [0e311cb](https://www.github.com/webview/webview_rust/commit/0e311cbd8e6083b674547ffbccb9f0247e1bdd16) Update webview-official which enables dpi awareness on windows ([#55](https://www.github.com/webview/webview_rust/pull/55)) on 2021-01-27
+
 ## [0.1.1]
 
 -   Update webview-official to fix macOS port viability.
