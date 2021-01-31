@@ -25,11 +25,13 @@ impl Default for SizeHint {
     }
 }
 
-#[derive(Clone)]
 pub struct Webview<'a> {
     inner: Arc<sys::webview_t>,
     url: &'a str,
 }
+
+unsafe impl Send for Webview<'_> {}
+unsafe impl Sync for Webview<'_> {}
 
 impl<'a> Drop for Webview<'a> {
     fn drop(&mut self) {

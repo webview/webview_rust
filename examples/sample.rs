@@ -15,9 +15,9 @@ fn main() {
         .url("https://google.com")
         .build();
 
-    let mut w = webview.clone();
+    webview.eval("console.log('The anwser is ' + window.x);");
+    let w = webview.as_mut();
     webview.bind("xxx", move |seq, _req| {
-        w.eval("console.log('The anwser is ' + window.x);");
         w.r#return(seq, 0, "{ result: 'We always knew it!' }");
     });
     webview.run();
