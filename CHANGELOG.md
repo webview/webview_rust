@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.0]
+
+-   Implement Send/Sync trait to Webview
+    -   [49d26ed](https://www.github.com/webview/webview_rust/commit/49d26ed8916ccac2f8eaf9f42b99ee88735af201) Implement Send/Sync trait to Webview ([#57](https://www.github.com/webview/webview_rust/pull/57)) on 2021-01-31
+
 ## [0.0.5]
 
 -   -   Bump WebView2 to version 1.0
