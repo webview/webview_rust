@@ -181,6 +181,14 @@ impl WebviewMut {
         Ok(unsafe { sys::webview_get_window(*webview) as *mut Window })
     }
 
+
+    pub fn eval(&mut self, js: &str) -> Result<(), Error> {
+        let webview = self.0.upgrade().ok_or(Error::WebviewNull)?;
+        let c_js = CString::new(js).expect("No null bytes in parameter js");
+        unsafe { sys::webview_eval(*webview, c_js.as_ptr()) }
+        Ok(())
+    }
+
     pub fn dispatch<F>(&mut self, f: F) -> Result<(), Error>
     where
         F: FnOnce(&mut Webview) + Send + 'static,
