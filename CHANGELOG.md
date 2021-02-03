@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.1]
+
+-   Add eval method to WebviewMut
+    -   [68ea653](https://www.github.com/webview/webview_rust/commit/68ea653f2a8082ce2dce600595a50aa555183e28) Add eval method to WebviewMut ([#59](https://www.github.com/webview/webview_rust/pull/59)) on 2021-02-03
+
 ## [0.1.0]
 
 -   Implement Send/Sync trait to Webview
