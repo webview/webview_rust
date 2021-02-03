@@ -1,5 +1,5 @@
 ---
-"webview": minor
+"webview": patch
 ---
 
 Add eval method to WebviewMut
