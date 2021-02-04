@@ -8,7 +8,7 @@ fn main() {
         .height(768)
         .resize(SizeHint::NONE)
         .init("window.x = 42")
-        .dispatch(|w| {
+        .dispatch(|mut w| {
             w.set_size(800, 600, SizeHint::MIN);
             println!("Hello World");
         })
@@ -18,7 +18,7 @@ fn main() {
     webview.eval("console.log('The anwser is ' + window.x);");
     let w = webview.as_mut();
     webview.bind("xxx", move |seq, _req| {
-        w.r#return(seq, 0, "{ result: 'We always knew it!' }");
+        w.r#return(seq, 0, "{ result: 'We always knew it!' }").expect("failed to return value");
     });
     webview.run();
 }
