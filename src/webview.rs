@@ -4,7 +4,7 @@ use std::os::raw::*;
 use std::ptr::null_mut;
 use std::sync::{Arc, Weak};
 
-use crate::{Error};
+use crate::Error;
 
 use webview_official_sys as sys;
 
@@ -25,15 +25,15 @@ impl Default for SizeHint {
     }
 }
 
-pub struct Webview<'a> {
+pub struct Webview {
     inner: Arc<sys::webview_t>,
-    url: &'a str,
+    url: String,
 }
 
-unsafe impl Send for Webview<'_> {}
-unsafe impl Sync for Webview<'_> {}
+unsafe impl Send for Webview {}
+unsafe impl Sync for Webview {}
 
-impl<'a> Drop for Webview<'a> {
+impl Drop for Webview {
     fn drop(&mut self) {
         if Arc::strong_count(&self.inner) == 0 {
             unsafe {
@@ -44,25 +44,25 @@ impl<'a> Drop for Webview<'a> {
     }
 }
 
-impl<'a> Webview<'a> {
+impl Webview {
     pub fn create(debug: bool, window: Option<&mut Window>) -> Webview {
         if let Some(w) = window {
             Webview {
                 inner: Arc::new(unsafe {
                     sys::webview_create(debug as c_int, w as *mut Window as *mut _)
                 }),
-                url: "",
+                url: "".to_string(),
             }
         } else {
             Webview {
                 inner: Arc::new(unsafe { sys::webview_create(debug as c_int, null_mut()) }),
-                url: "",
+                url: "".to_string(),
             }
         }
     }
 
     pub fn run(&mut self) {
-        let c_url = CString::new(self.url).expect("No null bytes in parameter url");
+        let c_url = CString::new(self.url.as_bytes()).expect("No null bytes in parameter url");
         unsafe { sys::webview_navigate(*self.inner, c_url.as_ptr()) }
         unsafe { sys::webview_run(*self.inner) }
     }
@@ -89,8 +89,8 @@ impl<'a> Webview<'a> {
         unsafe { sys::webview_get_window(*self.inner) as *mut Window }
     }
 
-    pub fn navigate(&mut self, url: &'a str) {
-        self.url = url;
+    pub fn navigate(&mut self, url: &str) {
+        self.url = url.to_string();
     }
 
     pub fn init(&mut self, js: &str) {
@@ -114,7 +114,7 @@ impl<'a> Webview<'a> {
         {
             let mut webview = Webview {
                 inner: Arc::new(webview),
-                url: "",
+                url: "".to_string(),
             };
             let closure: Box<F> = unsafe { Box::from_raw(arg as *mut F) };
             (*closure)(&mut webview);
@@ -181,7 +181,6 @@ impl WebviewMut {
         Ok(unsafe { sys::webview_get_window(*webview) as *mut Window })
     }
 
-
     pub fn eval(&mut self, js: &str) -> Result<(), Error> {
         let webview = self.0.upgrade().ok_or(Error::WebviewNull)?;
         let c_js = CString::new(js).expect("No null bytes in parameter js");
@@ -201,7 +200,7 @@ impl WebviewMut {
         {
             let mut webview = Webview {
                 inner: Arc::new(webview),
-                url: "",
+                url: "".to_string(),
             };
             let closure: Box<F> = unsafe { Box::from_raw(arg as *mut F) };
             (*closure)(&mut webview);
