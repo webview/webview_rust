@@ -25,6 +25,7 @@ impl Default for SizeHint {
     }
 }
 
+#[derive(Clone)]
 pub struct Webview {
     inner: Arc<sys::webview_t>,
     url: String,
@@ -71,7 +72,7 @@ impl Webview {
         unsafe { sys::webview_terminate(*self.inner) }
     }
 
-    pub fn as_mut(&mut self) -> WebviewMut {
+    pub fn as_mut(&self) -> WebviewMut {
         WebviewMut(Arc::downgrade(&self.inner))
     }
 
@@ -105,19 +106,19 @@ impl Webview {
 
     pub fn dispatch<F>(&mut self, f: F)
     where
-        F: FnOnce(&mut Webview) + Send + 'static,
+        F: FnOnce(Webview) + Send + 'static,
     {
         let closure = Box::into_raw(Box::new(f));
         extern "C" fn callback<F>(webview: sys::webview_t, arg: *mut c_void)
         where
-            F: FnOnce(&mut Webview) + Send + 'static,
+            F: FnOnce(Webview) + Send + 'static,
         {
-            let mut webview = Webview {
+            let webview = Webview {
                 inner: Arc::new(webview),
                 url: "".to_string(),
             };
             let closure: Box<F> = unsafe { Box::from_raw(arg as *mut F) };
-            (*closure)(&mut webview);
+            (*closure)(webview);
         }
         unsafe { sys::webview_dispatch(*self.inner, Some(callback::<F>), closure as *mut _) }
     }
@@ -181,29 +182,22 @@ impl WebviewMut {
         Ok(unsafe { sys::webview_get_window(*webview) as *mut Window })
     }
 
-    pub fn eval(&mut self, js: &str) -> Result<(), Error> {
-        let webview = self.0.upgrade().ok_or(Error::WebviewNull)?;
-        let c_js = CString::new(js).expect("No null bytes in parameter js");
-        unsafe { sys::webview_eval(*webview, c_js.as_ptr()) }
-        Ok(())
-    }
-
     pub fn dispatch<F>(&mut self, f: F) -> Result<(), Error>
     where
-        F: FnOnce(&mut Webview) + Send + 'static,
+        F: FnOnce(Webview) + Send + 'static,
     {
         let webview = self.0.upgrade().ok_or(Error::WebviewNull)?;
         let closure = Box::into_raw(Box::new(f));
         extern "C" fn callback<F>(webview: sys::webview_t, arg: *mut c_void)
         where
-            F: FnOnce(&mut Webview) + Send + 'static,
+            F: FnOnce(Webview) + Send + 'static,
         {
-            let mut webview = Webview {
+            let webview = Webview {
                 inner: Arc::new(webview),
                 url: "".to_string(),
             };
             let closure: Box<F> = unsafe { Box::from_raw(arg as *mut F) };
-            (*closure)(&mut webview);
+            (*closure)(webview);
         }
         unsafe { sys::webview_dispatch(*webview, Some(callback::<F>), closure as *mut _) }
         Ok(())

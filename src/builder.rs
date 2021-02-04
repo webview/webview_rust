@@ -8,7 +8,7 @@ pub struct WebviewBuilder<'a> {
     eval: Option<&'a str>,
     size: (usize, usize, SizeHint),
     debug: bool,
-    dispatch: Option<Box<dyn FnOnce(&mut Webview) + Send + 'static>>,
+    dispatch: Option<Box<dyn FnOnce(Webview) + Send + 'static>>,
     window: Option<&'a mut Window>,
 }
 
@@ -64,7 +64,7 @@ impl<'a> WebviewBuilder<'a> {
 
     pub fn dispatch<F>(mut self, f: F) -> Self
     where
-        F: FnOnce(&mut Webview) + Send + 'static,
+        F: FnOnce(Webview) + Send + 'static,
     {
         self.dispatch = Some(Box::new(f));
         self
