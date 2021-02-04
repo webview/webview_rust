@@ -8,7 +8,7 @@ fn main() {
         .height(768)
         .resize(SizeHint::NONE)
         .init("window.x = 42")
-        .dispatch(|mut w| {
+        .dispatch(|w| {
             w.set_size(800, 600, SizeHint::MIN);
             println!("Hello World");
         })

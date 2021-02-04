@@ -100,19 +100,19 @@ impl Webview {
 
     pub fn dispatch<F>(&mut self, f: F)
     where
-        F: FnOnce(Webview) + Send + 'static,
+        F: FnOnce(&mut Webview) + Send + 'static,
     {
         let closure = Box::into_raw(Box::new(f));
         extern "C" fn callback<F>(webview: sys::webview_t, arg: *mut c_void)
         where
-            F: FnOnce(Webview) + Send + 'static,
+            F: FnOnce(&mut Webview) + Send + 'static,
         {
-            let webview = Webview {
+            let mut webview = Webview {
                 inner: Arc::new(webview),
                 url: "".to_string(),
             };
             let closure: Box<F> = unsafe { Box::from_raw(arg as *mut F) };
-            (*closure)(webview);
+            (*closure)(&mut webview);
         }
         unsafe { sys::webview_dispatch(*self.inner, Some(callback::<F>), closure as *mut _) }
     }
