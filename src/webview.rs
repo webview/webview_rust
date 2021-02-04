@@ -2,9 +2,7 @@ use std::ffi::{CStr, CString};
 use std::mem;
 use std::os::raw::*;
 use std::ptr::null_mut;
-use std::sync::{Arc, Weak};
-
-use crate::Error;
+use std::sync::Arc;
 
 use webview_official_sys as sys;
 
@@ -70,10 +68,6 @@ impl Webview {
 
     pub fn terminate(&mut self) {
         unsafe { sys::webview_terminate(*self.inner) }
-    }
-
-    pub fn as_mut(&self) -> WebviewMut {
-        WebviewMut(Arc::downgrade(&self.inner))
     }
 
     // TODO Window instance
@@ -161,89 +155,5 @@ impl Webview {
         let c_seq = CString::new(seq).expect("No null bytes in parameter seq");
         let c_result = CString::new(result).expect("No null bytes in parameter result");
         unsafe { sys::webview_return(*self.inner, c_seq.as_ptr(), status, c_result.as_ptr()) }
-    }
-}
-
-#[derive(Clone)]
-pub struct WebviewMut(Weak<sys::webview_t>);
-
-unsafe impl Send for WebviewMut {}
-unsafe impl Sync for WebviewMut {}
-
-impl WebviewMut {
-    pub fn terminate(&mut self) -> Result<(), Error> {
-        let webview = self.0.upgrade().ok_or(Error::WebviewNull)?;
-        unsafe { sys::webview_terminate(*webview) }
-        Ok(())
-    }
-
-    pub fn get_window(&self) -> Result<*mut Window, Error> {
-        let webview = self.0.upgrade().ok_or(Error::WebviewNull)?;
-        Ok(unsafe { sys::webview_get_window(*webview) as *mut Window })
-    }
-
-    pub fn dispatch<F>(&mut self, f: F) -> Result<(), Error>
-    where
-        F: FnOnce(Webview) + Send + 'static,
-    {
-        let webview = self.0.upgrade().ok_or(Error::WebviewNull)?;
-        let closure = Box::into_raw(Box::new(f));
-        extern "C" fn callback<F>(webview: sys::webview_t, arg: *mut c_void)
-        where
-            F: FnOnce(Webview) + Send + 'static,
-        {
-            let webview = Webview {
-                inner: Arc::new(webview),
-                url: "".to_string(),
-            };
-            let closure: Box<F> = unsafe { Box::from_raw(arg as *mut F) };
-            (*closure)(webview);
-        }
-        unsafe { sys::webview_dispatch(*webview, Some(callback::<F>), closure as *mut _) }
-        Ok(())
-    }
-
-    pub fn bind<F>(&mut self, name: &str, f: F) -> Result<(), Error>
-    where
-        F: FnMut(&str, &str) + 'static,
-    {
-        let webview = self.0.upgrade().ok_or(Error::WebviewNull)?;
-        let c_name = CString::new(name).expect("No null bytes in parameter name");
-        let closure = Box::into_raw(Box::new(f));
-        extern "C" fn callback<F>(seq: *const c_char, req: *const c_char, arg: *mut c_void)
-        where
-            F: FnMut(&str, &str) + 'static,
-        {
-            let seq = unsafe {
-                CStr::from_ptr(seq)
-                    .to_str()
-                    .expect("No null bytes in parameter seq")
-            };
-            let req = unsafe {
-                CStr::from_ptr(req)
-                    .to_str()
-                    .expect("No null bytes in parameter req")
-            };
-            let mut f: Box<F> = unsafe { Box::from_raw(arg as *mut F) };
-            (*f)(seq, req);
-            mem::forget(f);
-        }
-        unsafe {
-            sys::webview_bind(
-                *webview,
-                c_name.as_ptr(),
-                Some(callback::<F>),
-                closure as *mut _,
-            )
-        }
-        Ok(())
-    }
-
-    pub fn r#return(&self, seq: &str, status: c_int, result: &str) -> Result<(), Error> {
-        let webview = self.0.upgrade().ok_or(Error::WebviewNull)?;
-        let c_seq = CString::new(seq).expect("No null bytes in parameter seq");
-        let c_result = CString::new(result).expect("No null bytes in parameter result");
-        unsafe { sys::webview_return(*webview, c_seq.as_ptr(), status, c_result.as_ptr()) }
-        Ok(())
     }
 }

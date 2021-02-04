@@ -11,11 +11,11 @@ fn main() {
         .url("https://google.com")
         .build();
 
-    let mut webview_ref = webview.as_mut();
+    let mut webview_ = webview.clone();
 
     thread::spawn(move || {
         thread::sleep(time::Duration::from_secs(5));
-        webview_ref.terminate().unwrap();
+        webview_.terminate();
     });
 
     webview.run();
