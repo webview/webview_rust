@@ -16,7 +16,7 @@ fn main() {
         .build();
 
     webview.eval("console.log('The anwser is ' + window.x);");
-    let w = webview.as_mut();
+    let w = webview.clone();
     webview.bind("xxx", move |seq, _req| {
         w.r#return(seq, 0, "{ result: 'We always knew it!' }");
     });
