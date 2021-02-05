@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.0]
+
+-   Remove lifetime parameter on `Webview` and remove `WebviewMut` struct.
+    -   [b633c25](https://www.github.com/webview/webview_rust/commit/b633c256904381fcb9b027792c0b83bd2d752391) refactor: remove webview lifetime argument, drop WebviewMut ([#61](https://www.github.com/webview/webview_rust/pull/61)) on 2021-02-05
+
 ## [0.1.1]
 
 -   Add eval method to WebviewMut
