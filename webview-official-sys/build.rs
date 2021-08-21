@@ -3,8 +3,12 @@ use std::env;
 use std::path::PathBuf;
 
 fn main() {
-    let mut build = Build::new();
     let target = env::var("TARGET").unwrap();
+    let mut build = Build::new();
+    build
+      .cpp(true)
+      .include("webview-official/webview.h")
+      .flag_if_supported("/std:c++11");
 
     if target.contains("windows") {
         build
