@@ -8,7 +8,8 @@ fn main() {
     build
       .cpp(true)
       .include("webview-official/webview.h")
-      .flag_if_supported("/std:c++11");
+      .flag_if_supported("/std:c++11")
+      .flag_if_supported("-w");
 
     if target.contains("windows") {
         build
