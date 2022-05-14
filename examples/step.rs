@@ -20,5 +20,5 @@ fn main() {
   webview.bind("xxx", move |seq, _req| {
     w.r#return(seq, 0, "{ result: 'We always knew it!' }");
   });
-  webview.run();
+  while webview.step(false) {}
 }

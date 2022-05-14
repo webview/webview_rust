@@ -1,6 +1,8 @@
 use cc::Build;
 use std::env;
 use std::fs;
+use std::process::Command;
+use std::path::Path;
 use std::path::PathBuf;
 
 fn main() {
@@ -21,11 +23,27 @@ fn main() {
     // }
 
     if target.contains("windows") {
+        let cwd_path = PathBuf::from(env::current_dir().unwrap().to_str().unwrap());
+        let nuget_url = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe";
+        let nuget_exe = "./nuget.exe";
+        let webview2_version = "1.0.1150.38";
+        let script_dir = "webview-official/script";
+        let webview2_path = &format!("{}/Microsoft.Web.WebView2.{}/build/native", script_dir, webview2_version);
+
+        if !Path::new(webview2_path).is_dir() {
+            if !Path::new(nuget_exe).is_file() {
+              Command::new("curl").args(&["-sSLO", nuget_url]).status().unwrap();
+            }
+
+            Command::new(nuget_exe).args(&["install", "Microsoft.Web.Webview2", "-Version", webview2_version, "-OutputDirectory", script_dir]).status().unwrap();
+        }
+
         // build.define("UNICODE", None); // doesn't work atm.
         build
             .file("webview-official/webview.cc")
             .flag_if_supported("/std:c++17");
         build.include("webview-official/script");
+        build.include(format!("{}/include", webview2_path));
 
         for &lib in &["windowsapp", "user32", "oleaut32", "ole32"] {
             println!("cargo:rustc-link-lib={}", lib);
@@ -38,19 +56,18 @@ fn main() {
         };
 
         // calculate full path to WebView2Loader.dll
-        let mut webview2_path_buf = PathBuf::from(env::current_dir().unwrap().to_str().unwrap());
-        webview2_path_buf
-            .push("webview-official/script/Microsoft.Web.WebView2.0.9.488/build/native");
-        webview2_path_buf.push(webview2_arch);
-        let webview2_dir = webview2_path_buf.as_path().to_str().unwrap();
+        let mut webview2_loader_path_buf = cwd_path.clone();
+        webview2_loader_path_buf.push(webview2_path);
+        webview2_loader_path_buf.push(webview2_arch);
+        let webview2_loader_dir = webview2_loader_path_buf.as_path().to_str().unwrap();
 
         let loader_asm_name = "WebView2Loader.dll";
 
-        println!("cargo:rustc-link-search={}", webview2_dir);
+        println!("cargo:rustc-link-search={}", webview2_loader_dir);
         println!("cargo:rustc-link-lib={}", loader_asm_name);
 
         // copy WebView2Loader.dll to `target/debug`
-        let mut src_asm_buf = PathBuf::from(webview2_dir);
+        let mut src_asm_buf = PathBuf::from(webview2_loader_dir);
         src_asm_buf.push(loader_asm_name);
 
         // we want to be able to calculate C:\crate\root\target\debug\

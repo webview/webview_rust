@@ -11,6 +11,8 @@ extern "C" {
 
     pub fn webview_destroy(w: webview_t);
 
+    pub fn webview_step(w: webview_t, blocking: i32) -> i32;
+
     pub fn webview_run(w: webview_t);
 
     pub fn webview_terminate(w: webview_t);

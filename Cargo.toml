@@ -5,7 +5,8 @@ authors = [
   "Lucas Fernandes Gonçalves Nogueira <lucas@tauri.studio>",
   "Daniel Thompson-Yvetot <denjell@sfosc.org>",
   "Tensor Programming <tensordeveloper@gmail.com>",
-  "Serge Zaitsev <zaitsev.serge@gmail.com>"
+  "Serge Zaitsev <zaitsev.serge@gmail.com>",
+  "Elias Sjögreen <eliassjogreen1@gmail.com>"
 ]
 readme = "README.md"
 license = "MIT OR Apache-2.0"
@@ -13,7 +14,7 @@ repository = "https://github.com/tauri-apps/webview_rust"
 description = "Official Webview-org Rust bindings, a tiny cross-platform library to render web-based GUIs for desktop applications"
 keywords = [ "web", "gui", "desktop", "webkit" ]
 categories = [ "gui", "api-bindings" ]
-edition = "2018"
+edition = "2021"
 
 [lib]
 name = "webview_official"
